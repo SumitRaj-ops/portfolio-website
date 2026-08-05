@@ -1,71 +1,85 @@
-// ===============================
-// MOBILE MENU
-// ===============================
+// ===========================
+// Mobile Menu
+// ===========================
 
 const menuBtn = document.querySelector(".menu-btn");
 const navLinks = document.querySelector(".nav-links");
 
-menuBtn.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
-});
-
-// Close menu after clicking a link
-document.querySelectorAll(".nav-links a").forEach(link => {
-    link.addEventListener("click", () => {
-        navLinks.classList.remove("active");
+if (menuBtn) {
+    menuBtn.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
     });
-});
+}
 
-// ===============================
-// NAVBAR SHADOW ON SCROLL
-// ===============================
+// ===========================
+// Active Navbar
+// ===========================
 
-const header = document.querySelector("header");
+const sections = document.querySelectorAll("section");
+const links = document.querySelectorAll(".nav-links a");
 
 window.addEventListener("scroll", () => {
-    if (window.scrollY > 50) {
-        header.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
-    } else {
-        header.style.boxShadow = "0 5px 20px rgba(0,0,0,0.08)";
-    }
-});
 
-// ===============================
-// SCROLL ANIMATION
-// ===============================
+    let current = "";
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = "1";
-            entry.target.style.transform = "translateY(0)";
+    sections.forEach(section => {
+
+        const top = section.offsetTop - 120;
+
+        if (pageYOffset >= top) {
+            current = section.getAttribute("id");
         }
+
     });
-}, {
-    threshold: 0.15
+
+    links.forEach(link => {
+
+        link.classList.remove("active");
+
+        if (link.getAttribute("href") === "#" + current) {
+            link.classList.add("active");
+        }
+
+    });
+
 });
 
-const sections = document.querySelectorAll(
-    ".hero, .about, .skills, .projects, .contact"
-);
+// ===========================
+// Smooth Scroll
+// ===========================
 
-sections.forEach(section => {
-    section.style.opacity = "0";
-    section.style.transform = "translateY(40px)";
-    section.style.transition = "all 0.8s ease";
-    observer.observe(section);
+links.forEach(link => {
+
+    link.addEventListener("click", function(e) {
+
+        e.preventDefault();
+
+        const target = document.querySelector(this.getAttribute("href"));
+
+        target.scrollIntoView({
+            behavior: "smooth"
+        });
+
+    });
+
 });
 
-// ===============================
-// CONTACT FORM
-// ===============================
+// ===========================
+// Contact Form
+// ===========================
 
-const form = document.querySelector("form");
+const form = document.querySelector(".contact-form");
 
-form.addEventListener("submit", function (e) {
-    e.preventDefault();
+if (form) {
 
-    alert("Thank you! Your message has been received.");
+    form.addEventListener("submit", function(e) {
 
-    form.reset();
-});
+        e.preventDefault();
+
+        alert("Thank you! Your message has been sent successfully.");
+
+        form.reset();
+
+    });
+
+}
